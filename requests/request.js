@@ -1,17 +1,17 @@
-const getPuzzleAsync = (callback) => {
-  const request = new XMLHttpRequest(); // Making an HTTP request
+const getPuzzleAsync = () =>
+  new Promise((resolve, reject) => {
+    const request = new XMLHttpRequest();
 
-  request.addEventListener('readystatechange', (e) => {
-    if (e.target.readyState === 4 && e.target.status === 200) {
-      const data = JSON.parse(e.target.responseText);
-      callback(undefined, data.puzzle);
-    } else if (e.target.readyState === 4) callback('Something went wrong!');
+    request.addEventListener('readystatechange', (e) => {
+      if (e.target.readyState === 4 && e.target.status === 200) {
+        const data = JSON.parse(e.target.responseText);
+        resolve(data.puzzle);
+      } else if (e.target.readyState === 4) reject('Something went wrong!');
+    });
+
+    request.open('GET', 'http://puzzle.mead.io/slow-puzzle?wordCount=4');
+    request.send();
   });
-
-  // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/open
-  request.open('GET', 'http://puzzle.mead.io/slow-puzzle?wordCount=4');
-  request.send();
-};
 
 const getPuzzleSync = () => {
   const request = new XMLHttpRequest();

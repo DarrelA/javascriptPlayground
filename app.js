@@ -12,14 +12,15 @@ document.addEventListener('keypress', (e) => {
   guessesEl.textContent = game1.statusMessage;
 });
 
-// getPuzzleAsync((error, puzzle) => {
-//   if (error) return console.log({ error });
-//   else console.log('Asynchronous getPuzzle: ', puzzle);
-// });
+// getPuzzleAsync().then(
+//   (puzzle) => console.log('Asynchronous getPuzzle: ', puzzle),
+//   (err) => console.log({ err })
+// );
 
 // console.log('Synchronous getPuzzle:', getPuzzleSync());
 
-getCountryName('AU', (error, countryName) => {
-  if (error) return console.log({ error });
-  else console.log(countryName);
-});
+// Turn off to save API calls.
+// getCountryName('LK').then(
+//   (countryName) => console.log(countryName),
+//   (err) => console.log({ err })
+// );

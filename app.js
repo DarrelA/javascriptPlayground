@@ -24,3 +24,11 @@ document.addEventListener('keypress', (e) => {
 //   (country) => console.log(country.name),
 //   (err) => console.log({ err })
 // );
+
+// getLocation().then(
+//   (location) =>
+//     console.log(
+//       `IP: ${location.ip}, City: ${location.city}, Region: ${location.region}, Coords: ${location.loc}`
+//     ),
+//   (err) => console.log({ err })
+// );

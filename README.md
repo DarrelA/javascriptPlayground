@@ -13,6 +13,7 @@
 3. Insert <i>countrylayer</i> API key. <i>This is totally <span style="color: red"><b>UNSAFE</b></i></span> for production as you can retrieve the key front client side.
    ```js
    const API_KEY_COUNTRYLAYER = 'someAPIkey'; // https://countrylayer.com/
+   const ACCESS_TOKEN_IPINFO = 'someAccessTokenCode'; // https://ipinfo.io/
    ```
 4. VS Code - Drawio Integration extension
 

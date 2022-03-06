@@ -18,3 +18,6 @@
 ## Notes
 
 1. Web API on XMLHttpRequest (https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest)
+2. Async callbacks (https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Introducing#async_callbacks)
+
+   > When we pass a callback function as an argument to another function, we are only passing the function's reference as an argument, i.e, the callback function is not executed immediately. It is "called back" (hence the name) asynchronously somewhere inside the containing function's body. The containing function is responsible for executing the callback function when the time comes.

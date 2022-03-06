@@ -12,15 +12,15 @@ document.addEventListener('keypress', (e) => {
   guessesEl.textContent = game1.statusMessage;
 });
 
-// getPuzzleAsync().then(
-//   (puzzle) => console.log('Asynchronous getPuzzle: ', puzzle),
-//   (err) => console.log({ err })
-// );
+getPuzzleAsync().then(
+  (puzzle) => console.log('Asynchronous getPuzzle: ', puzzle),
+  (err) => console.log({ err })
+);
 
 // console.log('Synchronous getPuzzle:', getPuzzleSync());
 
 // Turn off to save API calls.
-// getCountryName('LK').then(
+// getCountryName('PS').then(
 //   (country) => console.log(country.name),
 //   (err) => console.log({ err })
 // );

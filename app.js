@@ -1,21 +1,31 @@
 const puzzleEl = document.querySelector('#puzzle');
 const guessesEl = document.querySelector('#guesses');
-const game1 = new Hangman('pneumonoultramicroscopicsilicovolcanoconiosis', 2);
+let game1;
 
-puzzleEl.textContent = game1.puzzle;
-guessesEl.textContent = game1.statusMessage;
+const render = () => {
+  puzzleEl.textContent = game1.puzzle;
+  guessesEl.textContent = game1.statusMessage;
+};
+
+const startGame = async () => {
+  const puzzle = await getPuzzleAsync('4');
+  game1 = new Hangman(puzzle, 5);
+  render();
+};
 
 document.addEventListener('keypress', (e) => {
   const guess = e.key;
   game1.makeGuess(guess);
-  puzzleEl.textContent = game1.puzzle;
-  guessesEl.textContent = game1.statusMessage;
+  render();
 });
 
-getPuzzleAsync().then(
-  (puzzle) => console.log('Asynchronous getPuzzle: ', puzzle),
-  (err) => console.log({ err })
-);
+document.querySelector('#reset').addEventListener('click', startGame);
+startGame();
+
+// getPuzzleAsync(4).then(
+//   (puzzle) => console.log('Asynchronous getPuzzle: ', puzzle),
+//   (err) => console.log({ err })
+// );
 
 // console.log('Synchronous getPuzzle:', getPuzzleSync());
 

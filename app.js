@@ -12,9 +12,14 @@ document.addEventListener('keypress', (e) => {
   guessesEl.textContent = game1.statusMessage;
 });
 
-getPuzzleAsync((error, puzzle) => {
-  if (error) return console.log({ error });
-  else console.log('Asynchronous getPuzzle: ', puzzle);
-});
+// getPuzzleAsync((error, puzzle) => {
+//   if (error) return console.log({ error });
+//   else console.log('Asynchronous getPuzzle: ', puzzle);
+// });
 
 // console.log('Synchronous getPuzzle:', getPuzzleSync());
+
+getCountryName('AU', (error, countryName) => {
+  if (error) return console.log({ error });
+  else console.log(countryName);
+});

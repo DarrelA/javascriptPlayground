@@ -3,8 +3,13 @@ const guessesEl = document.querySelector('#guesses');
 let game1;
 
 const render = () => {
-  puzzleEl.textContent = game1.puzzle;
+  puzzleEl.innerHTML = '';
   guessesEl.textContent = game1.statusMessage;
+  for (let char of game1.puzzle) {
+    const charEl = document.createElement('span');
+    charEl.textContent = char;
+    puzzleEl.appendChild(charEl);
+  }
 };
 
 const startGame = async () => {

@@ -21,6 +21,6 @@ document.addEventListener('keypress', (e) => {
 
 // Turn off to save API calls.
 // getCountryName('LK').then(
-//   (countryName) => console.log(countryName),
+//   (country) => console.log(country.name),
 //   (err) => console.log({ err })
 // );

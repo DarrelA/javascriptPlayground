@@ -1,17 +1,11 @@
 const getPuzzleAsync = () =>
-  new Promise((resolve, reject) => {
-    const request = new XMLHttpRequest();
-
-    request.addEventListener('readystatechange', (e) => {
-      if (e.target.readyState === 4 && e.target.status === 200) {
-        const data = JSON.parse(e.target.responseText);
-        resolve(data.puzzle);
-      } else if (e.target.readyState === 4) reject('Something went wrong!');
-    });
-
-    request.open('GET', 'http://puzzle.mead.io/slow-puzzle?wordCount=4');
-    request.send();
-  });
+  fetch('http://puzzle.mead.io/puzzle?wordCount=4', {})
+    .then((response) => {
+      if (response.status === 200) return response.json();
+      else throw new Error('Unable to fetch the puzzle.');
+    })
+    .then((data) => data.puzzle)
+    .catch((err) => err);
 
 const getPuzzleSync = () => {
   const request = new XMLHttpRequest();

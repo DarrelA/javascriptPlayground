@@ -12,7 +12,9 @@ document.addEventListener('keypress', (e) => {
   guessesEl.textContent = game1.statusMessage;
 });
 
-getPuzzle((error, puzzle) => {
+getPuzzleAsync((error, puzzle) => {
   if (error) return console.log({ error });
-  else console.log(puzzle);
+  else console.log('Asynchronous getPuzzle: ', puzzle);
 });
+
+// console.log('Synchronous getPuzzle:', getPuzzleSync());

@@ -14,6 +14,7 @@
    ```js
    const API_KEY_COUNTRYLAYER = 'someAPIkey'; // https://countrylayer.com/
    ```
+4. VS Code - Drawio Integration extension
 
 ## Notes
 

@@ -1,0 +1,21 @@
+{
+  "name": "javascript-playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "callback.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DarrelA/javascriptPlayground.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DarrelA/javascriptPlayground/issues"
+  },
+  "homepage": "https://github.com/DarrelA/javascriptPlayground#readme"
+}

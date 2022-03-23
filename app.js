@@ -1,8 +1,14 @@
 class Timer {
-  constructor(durationInput, startButton, pauseButton) {
+  constructor(durationInput, startButton, pauseButton, callbacks) {
     this.durationInput = durationInput;
     this.startButton = startButton;
     this.pauseButton = pauseButton;
+
+    if (callbacks) {
+      this.onStart = callbacks.onStart;
+      this.onTick = callbacks.onTick;
+      this.onComplete = callbacks.onComplete;
+    }
 
     this.startButton.addEventListener('click', this.start);
     this.pauseButton.addEventListener('click', this.pause);
@@ -11,6 +17,8 @@ class Timer {
   // value of this must be set to the instance of the class
   // using arrow function or call, bind or apply respectively.
   start = () => {
+    if (this.onStart) this.onStart();
+
     this.tick();
     this.interval = setInterval(this.tick, 1000);
   };
@@ -21,9 +29,13 @@ class Timer {
   // this.timeRemaining - 1 is calling the getter
   // https://www.youtube.com/watch?v=bl98dm7vJt0&t=337s
   tick = () => {
-    this.timeRemaining <= 0
-      ? this.pause()
-      : (this.timeRemaining = this.timeRemaining - 1);
+    if (this.timeRemaining <= 0) {
+      this.pause();
+      if (this.onComplete) this.onComplete();
+    } else {
+      this.timeRemaining = this.timeRemaining - 1;
+      if (this.onTick) this.onTick();
+    }
   };
 
   get timeRemaining() {
@@ -39,4 +51,15 @@ const durationInput = document.querySelector('#duration');
 const startButton = document.querySelector('#start');
 const pauseButton = document.querySelector('#pause');
 
-const timer = new Timer(durationInput, startButton, pauseButton);
+const timer = new Timer(durationInput, startButton, pauseButton, {
+  // Emit an event stating that the timer has started.
+  onStart() {
+    console.log('Timer started.');
+  },
+  onTick() {
+    console.log('Ticking');
+  },
+  onComplete() {
+    console.log('Beep Beep Beep!');
+  },
+});

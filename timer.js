@@ -17,13 +17,17 @@ class Timer {
   // value of this must be set to the instance of the class
   // using arrow function or call, bind or apply respectively.
   start = () => {
-    if (this.onStart) this.onStart();
+    if (this.onStart) this.onStart(this.timeRemaining);
 
     this.tick();
-    this.interval = setInterval(this.tick, 1000);
+    this.interval = setInterval(this.tick, 20);
+    this.startButton.disabled = true;
   };
 
-  pause = () => clearInterval(this.interval);
+  pause = () => {
+    clearInterval(this.interval);
+    this.startButton.disabled = false;
+  };
 
   // this.timeRemaining is calling setter
   // this.timeRemaining - 1 is calling the getter
@@ -33,8 +37,8 @@ class Timer {
       this.pause();
       if (this.onComplete) this.onComplete();
     } else {
-      this.timeRemaining = this.timeRemaining - 1;
-      if (this.onTick) this.onTick();
+      this.timeRemaining = this.timeRemaining - 0.02;
+      if (this.onTick) this.onTick(this.timeRemaining);
     }
   };
 
@@ -43,6 +47,6 @@ class Timer {
   }
 
   set timeRemaining(time) {
-    this.durationInput.value = time;
+    this.durationInput.value = time.toFixed(2);
   }
 }

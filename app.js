@@ -16,7 +16,23 @@ class Timer {
   };
 
   pause = () => clearInterval(this.interval);
-  tick = () => console.log('tick');
+
+  // this.timeRemaining is calling setter
+  // this.timeRemaining - 1 is calling the getter
+  // https://www.youtube.com/watch?v=bl98dm7vJt0&t=337s
+  tick = () => {
+    this.timeRemaining <= 0
+      ? this.pause()
+      : (this.timeRemaining = this.timeRemaining - 1);
+  };
+
+  get timeRemaining() {
+    return +this.durationInput.value;
+  }
+
+  set timeRemaining(time) {
+    this.durationInput.value = time;
+  }
 }
 
 const durationInput = document.querySelector('#duration');

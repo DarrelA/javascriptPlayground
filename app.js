@@ -63,10 +63,15 @@ const runComparison = () => {
   // Works for any order of stats.
   leftSideStats.forEach((leftStat, index) => {
     const rightStat = rightSideStats[index];
-    const leftSideValue = leftStat.dataset.value;
-    const rightSideValue = rightStat.dataset.value;
+    const leftSideValue = +leftStat.dataset.value;
+    const rightSideValue = +rightStat.dataset.value;
 
-    if (isNaN(rightSideValue) || isNaN(leftSideValue)) {
+    if (
+      isNaN(rightSideValue) ||
+      rightSideValue === 0 ||
+      isNaN(leftSideValue) ||
+      leftSideValue === 0
+    ) {
       rightStat.classList.remove('is-primary');
       leftStat.classList.remove('is-primary');
     } else if (rightSideValue > leftSideValue) {

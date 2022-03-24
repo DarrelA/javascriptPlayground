@@ -22,25 +22,17 @@ const autoCompleteConfig = {
   },
 };
 
-createAutoComplete({
-  root: document.querySelector('#left-autocomplete'),
-  ...autoCompleteConfig,
+for (let side of ['left', 'right']) {
+  createAutoComplete({
+    root: document.querySelector(`#${side}-autocomplete`),
+    ...autoCompleteConfig,
 
-  onOptionSelect(movie, summaryElement) {
-    document.querySelector('.tutorial').classList.add('is-hidden');
-    onMovieSelect(movie, document.querySelector('#left-summary'));
-  },
-});
-
-createAutoComplete({
-  root: document.querySelector('#right-autocomplete'),
-  ...autoCompleteConfig,
-
-  onOptionSelect(movie, summary) {
-    document.querySelector('.tutorial').classList.add('is-hidden');
-    onMovieSelect(movie, document.querySelector('#right-summary'));
-  },
-});
+    onOptionSelect(movie) {
+      document.querySelector('.tutorial').classList.add('is-hidden');
+      onMovieSelect(movie, document.querySelector(`#${side}-summary`));
+    },
+  });
+}
 
 const onMovieSelect = async (movie, summary) => {
   const response = await axios.get('http://www.omdbapi.com/', {

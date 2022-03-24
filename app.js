@@ -5,19 +5,40 @@ const fetchData = async (searchTerm) => {
       s: searchTerm,
     },
   });
-  console.log(response);
+  if (response.data.Error) return [];
+  return response.data.Search;
 };
+
+const root = document.querySelector('.autocomplete');
+root.innerHTML = /*html*/ `
+    <label><b>Search For a Movie</b></label>
+    <input class="input" />
+    <div class="dropdown">
+    <div class="dropdown-menu">
+        <div class="dropdown-content results"></div>
+    </div>
+    </div>
+`;
 
 const input = document.querySelector('input');
+const dropdown = document.querySelector('.dropdown');
+const resultsWrapper = document.querySelector('.results');
 
-// Deboucing an input: Waiting for some time to pass after the last event to actually do something.
-const debounce = (func, delay = 700) => {
-  let timeoutId;
-  return (...args) => {
-    if (timeoutId) clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func.apply(null, args), delay);
-  };
+const onInput = async (event) => {
+  const movies = await fetchData(event.target.value);
+
+  dropdown.classList.add('is-active');
+  for (const movie of movies) {
+    const option = document.createElement('a');
+
+    option.classList.add('dropdown-item');
+    option.innerHTML = /*html*/ `
+      <img src='${movie.Poster}' />
+      ${movie.Title}
+      `;
+
+    resultsWrapper.appendChild(option);
+  }
 };
 
-const onInput = (event) => fetchData(event.target.value);
 input.addEventListener('input', debounce(onInput));

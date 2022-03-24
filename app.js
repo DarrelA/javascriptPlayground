@@ -29,12 +29,17 @@ for (let side of ['left', 'right']) {
 
     onOptionSelect(movie) {
       document.querySelector('.tutorial').classList.add('is-hidden');
-      onMovieSelect(movie, document.querySelector(`#${side}-summary`));
+      onMovieSelect(
+        movie,
+        document.querySelector(`#${side}-summary`),
+        `${side}`
+      );
     },
   });
 }
 
-const onMovieSelect = async (movie, summary) => {
+let leftMovie, rightMovie;
+const onMovieSelect = async (movie, summary, side) => {
   const response = await axios.get('http://www.omdbapi.com/', {
     params: {
       apikey: OMDBAPI_API_KEY,
@@ -43,9 +48,49 @@ const onMovieSelect = async (movie, summary) => {
   });
 
   summary.innerHTML = movieTemplate(response.data);
+  side === 'left' ? (leftMovie = response.data) : (rightMovie = response.data);
+  if (leftMovie && rightMovie) runComparison();
+};
+
+const runComparison = () => {
+  const leftSideStats = document.querySelectorAll(
+    '#left-summary .notification'
+  );
+  const rightSideStats = document.querySelectorAll(
+    '#right-summary .notification'
+  );
+
+  // Works for any order of stats.
+  leftSideStats.forEach((leftStat, index) => {
+    const rightStat = rightSideStats[index];
+    const leftSideValue = leftStat.dataset.value;
+    const rightSideValue = rightStat.dataset.value;
+
+    if (isNaN(rightSideValue) || isNaN(leftSideValue)) {
+      rightStat.classList.remove('is-primary');
+      leftStat.classList.remove('is-primary');
+    } else if (rightSideValue > leftSideValue) {
+      leftStat.classList.remove('is-primary');
+      leftStat.classList.add('is-warning');
+    } else {
+      rightStat.classList.remove('is-primary');
+      rightStat.classList.add('is-warning');
+    }
+  });
 };
 
 const movieTemplate = (movieDetail) => {
+  const awards = movieDetail.Awards.split(' ').reduce((prev, word) => {
+    const value = +word;
+    if (isNaN(value)) return prev;
+    else return prev + value;
+  }, 0);
+
+  const dollars = +movieDetail.BoxOffice.replace(/\D/g, '');
+  const metaScore = +movieDetail.Metascore;
+  const imdbRating = +movieDetail.imdbRating;
+  const imdbVotes = +movieDetail.imdbVotes.replace(/,/g, '');
+
   return /*html*/ `
 <article class="media">
   <figure class="media-left">
@@ -61,23 +106,23 @@ const movieTemplate = (movieDetail) => {
   </div>
 </article>
 
-<article class="notification is-primary">
+<article data-value=${awards} class="notification is-primary">
   <p class="title">${movieDetail.Awards}</p>
   <p class="subtitle">Awards</p>
 </article>
-<article class="notification is-primary">
+<article data-value=${dollars} class="notification is-primary">
   <p class="title">${movieDetail.BoxOffice}</p>
   <p class="subtitle">BoxOffice</p>
 </article>
-<article class="notification is-primary">
+<article data-value=${metaScore} class="notification is-primary">
   <p class="title">${movieDetail.Metascore}</p>
   <p class="subtitle">Metascore</p>
 </article>
-<article class="notification is-primary">
+<article data-value=${imdbRating} class="notification is-primary">
   <p class="title">${movieDetail.imdbRating}</p>
   <p class="subtitle">IMDB Rating</p>
 </article>
-<article class="notification is-primary">
+<article data-value=${imdbVotes} class="notification is-primary">
   <p class="title">${movieDetail.imdbVotes}</p>
   <p class="subtitle">IMDB Votes</p>
 </article>

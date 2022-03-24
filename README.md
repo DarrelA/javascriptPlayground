@@ -26,7 +26,7 @@ const OMDBAPI_API_KEY = 'apikey'; // http://www.omdbapi.com/
 
 ### Style of Widget Creation
 
-## Option 1 :
+#### Option 1 :
 
 ```html
 <div class="autocomplete">
@@ -46,7 +46,7 @@ const OMDBAPI_API_KEY = 'apikey'; // http://www.omdbapi.com/
 3. Do search.
 4. Add in options to existing HTML.
 
-## Option 2 :
+#### Option 2 :
 
 ```html
 <div class="autocomplete"></div>
@@ -60,6 +60,36 @@ const OMDBAPI_API_KEY = 'apikey'; // http://www.omdbapi.com/
 4. Do search.
 5. Add in html for menu.
 6. Add in options to menu.
+
+&nbsp;
+
+### Autocomplete Widget
+
+#### Issues with first implementation
+
+1. All code touches everything.
+2. Autocomplete widget was supposed to be reusable.
+3. Autocomplete has knowledge of what a movie object is.
+4. Autocomplete has knowledge of what to show for each option.
+5. Autocomplete has knowledge of what to do when a movie is clicked.
+6. Many global variables that refer to specific elements - it will be really hard to show a second autocomplete on the screen.
+
+#### Refactoring
+
+- <u>index.js</u>
+- Non-reusable code for our very specific project.
+- Config for Autocomplete
+
+  - fetchData() - function to find movies.
+  - renderOption() - function that knows how to render a movie.
+  - onOptionSelect() - function that gets invoked when a user clicks an option.
+  - root - element that the autocomplete should be rendered into.
+
+&nbsp;
+
+- <u>autocomplete.js</u>
+- Super reusable code to get an autocomplete to work. Zero knowledge of 'movies' or 'recipes' or 'blogs'. Must be able to be ran several times in the same project.
+  - Function that will take the autocomplete config and render an autocomplete on the screen.
 
 &nbsp;
 

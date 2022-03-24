@@ -1,30 +1,38 @@
 createAutoComplete({
   root: document.querySelector('.autocomplete'),
 
-  renderOption(movie) {
+  renderOption(variable) {
+    //   return `
+    // <img src='${movie.Poster === 'N/A' ? '' : movie.Poster}' />
+    // ${movie.Title} ${movie.Year}
+    // `;
     return `
-  <img src='${movie.Poster === 'N/A' ? '' : movie.Poster}' />
-  ${movie.Title} ${movie.Year}
+  <img src='${variable.thumbnailUrl}' />
+  ${variable.title}
   `;
   },
 
-  onOptionSelect(movie) {
-    onMovieSelect(movie);
+  onOptionSelect(variable) {
+    onMovieSelect(variable);
   },
 
-  inputValue(movie) {
-    return movie.Title;
+  inputValue(variable) {
+    return variable.Title;
   },
 
-  asyncfetchData(searchTerm) {
-    const response = await axios.get('http://www.omdbapi.com/', {
-      params: {
-        apikey: OMDBAPI_API_KEY,
-        s: searchTerm,
-      },
-    });
+  async fetchData(searchTerm) {
+    const response = await axios.get(
+      'https://jsonplaceholder.typicode.com/photos?albumId=8',
+      {
+        // params: {
+        //   apikey: OMDBAPI_API_KEY,
+        //   s: searchTerm,
+        // },
+      }
+    );
     if (response.data.Error) return [];
-    return response.data.Search;
+    // return response.data.Search;
+    return response.data;
   },
 });
 

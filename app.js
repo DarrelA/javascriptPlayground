@@ -1,7 +1,7 @@
-const { Engine, Render, Runner, World, Bodies, Mouse, MouseConstraint } =
-  Matter;
-const width = 800;
+const { Engine, Render, Runner, World, Bodies } = Matter;
+const width = 600;
 const height = 600;
+const cells = 3;
 
 const engine = Engine.create();
 const { world } = engine;
@@ -9,7 +9,7 @@ const render = Render.create({
   element: document.body,
   engine: engine,
   options: {
-    wireframes: false,
+    wireframes: true,
     width,
     height,
   },
@@ -18,34 +18,40 @@ const render = Render.create({
 Render.run(render);
 Runner.run(Runner.create(), engine);
 
-World.add(
-  world,
-  MouseConstraint.create(engine, {
-    mouse: Mouse.create(render.canvas),
-  })
-);
-
 const walls = [
-  Bodies.rectangle(400, 0, 800, 40, { isStatic: true }),
-  Bodies.rectangle(400, 600, 800, 40, { isStatic: true }),
-  Bodies.rectangle(0, 300, 40, 600, { isStatic: true }),
-  Bodies.rectangle(800, 300, 40, 600, { isStatic: true }),
+  Bodies.rectangle(width / 2, 0, width, 40, { isStatic: true }),
+  Bodies.rectangle(width / 2, height, width, 40, { isStatic: true }),
+  Bodies.rectangle(0, height / 2, 40, height, { isStatic: true }),
+  Bodies.rectangle(width, height / 2, 40, height, { isStatic: true }),
 ];
 
 World.add(world, walls);
 
-for (let i = 0; i < 99; i++) {
-  if (Math.random() > 0.5) {
-    World.add(
-      world,
-      Bodies.rectangle(Math.random() * width, Math.random() * height, 50, 50)
-    );
-  } else {
-    World.add(
-      world,
-      Bodies.circle(Math.random() * width, Math.random() * height, 25, {
-        render: { fillStyle: 'RebeccaPurple' },
-      })
-    );
-  }
-}
+// Maze Generation
+const grid = Array(cells) // row
+  .fill(null)
+  .map(() => Array(cells).fill(false)); // column
+
+const verticals = Array(cells)
+  .fill(null)
+  .map(() => Array(cells - 1).fill(false));
+
+const horizontals = Array(cells - 1)
+  .fill(null)
+  .map(() => Array(cells).fill(false));
+
+const startRow = Math.floor(Math.random() * cells);
+const startColumn = Math.floor(Math.random() * cells);
+
+const visitCell = (row, column) => {
+  // If I have visted the cell at [row, column], then return.
+  // Mark this cell as being visited.
+  // Assemble randomly-ordered list of neighbors.
+  // For each neighbor...
+  // See if that neighbor is out of bounds.
+  // If we have visited that neighbor, continue to next neighbor.
+  // Remove a wall from either horizontals or verticals.
+  // Visit that next cell.
+};
+
+visitCell(startRow, startColumn);

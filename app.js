@@ -1,39 +1,39 @@
-createAutoComplete({
-  root: document.querySelector('.autocomplete'),
-
-  renderOption(variable) {
-    //   return `
-    // <img src='${movie.Poster === 'N/A' ? '' : movie.Poster}' />
-    // ${movie.Title} ${movie.Year}
-    // `;
+const autoCompleteConfig = {
+  renderOption(movie) {
     return `
-  <img src='${variable.thumbnailUrl}' />
-  ${variable.title}
+  <img src='${movie.Poster === 'N/A' ? '' : movie.Poster}' />
+  ${movie.Title} ${movie.Year}
   `;
   },
 
-  onOptionSelect(variable) {
-    onMovieSelect(variable);
+  onOptionSelect(movie) {
+    onMovieSelect(movie);
   },
 
-  inputValue(variable) {
-    return variable.Title;
+  inputValue(movie) {
+    return movie.Title;
   },
 
   async fetchData(searchTerm) {
-    const response = await axios.get(
-      'https://jsonplaceholder.typicode.com/photos?albumId=8',
-      {
-        // params: {
-        //   apikey: OMDBAPI_API_KEY,
-        //   s: searchTerm,
-        // },
-      }
-    );
+    const response = await axios.get('http://www.omdbapi.com/', {
+      params: {
+        apikey: OMDBAPI_API_KEY,
+        s: searchTerm,
+      },
+    });
     if (response.data.Error) return [];
-    // return response.data.Search;
-    return response.data;
+    return response.data.Search;
   },
+};
+
+createAutoComplete({
+  root: document.querySelector('#left-autocomplete'),
+  ...autoCompleteConfig,
+});
+
+createAutoComplete({
+  root: document.querySelector('#right-autocomplete'),
+  ...autoCompleteConfig,
 });
 
 const onMovieSelect = async (movie) => {

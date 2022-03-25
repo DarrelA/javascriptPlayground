@@ -103,8 +103,8 @@ fs.readdir(process.cwd(), async (err, filenames) => {
 
 // ************************************************************************************************** //
 
-// Solution 3
-// /*
+// Solution 2 method 3
+/*
 const { lstat } = fs.promises;
 
 fs.readdir(process.cwd(), async (err, filenames) => {
@@ -126,4 +126,23 @@ fs.readdir(process.cwd(), async (err, filenames) => {
     }
   }
 });
-// */
+*/
+
+// ************************************************************************************************** //
+
+// Solution 3 - Best
+
+const { lstat } = fs.promises;
+
+fs.readdir(process.cwd(), async (err, filenames) => {
+  if (err) console.log(err);
+
+  const statPromises = filenames.map((filename) => lstat(filename));
+  const allStats = await Promise.all(statPromises);
+  for (const stats of allStats) {
+    const index = allStats.indexOf(stats);
+    console.log(filenames[index], stats.isFile());
+  }
+});
+
+// ************************************************************************************************** //

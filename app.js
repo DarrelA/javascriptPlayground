@@ -62,18 +62,45 @@ const visitCell = (row, column) => {
 
   // Assemble randomly-ordered list of neighbors.
   const neighbors = shuffle([
-    [row - 1, column],
-    [row, column + 1],
-    [row + 1, column],
-    [row, column + 1],
+    [row - 1, column, 'up'],
+    [row, column + 1, 'right'],
+    [row + 1, column, 'down'],
+    [row, column - 1, 'left'],
   ]);
-  // For each neighbor...
 
-  // See if that neighbor is out of bounds.
-  // If we have visited that neighbor, continue to next neighbor.
-  // Remove a wall from either horizontals or verticals.
+  for (const neighbor of neighbors) {
+    const [nextRow, nextColumn, direction] = neighbor;
+
+    // Check if that neighbor is out of bounds.
+    if (
+      nextRow < 0 ||
+      nextRow >= cells ||
+      nextColumn < 0 ||
+      nextColumn >= cells
+    )
+      continue;
+
+    // If neighbor was visited, continue to next neighbor.
+    if (grid[nextRow][nextColumn]) continue;
+
+    // Remove a wall from either horizontals or verticals.
+    // Starts at index of 1 for both row and column; row stays the same.
+    if (direction === 'left') {
+      verticals[row][column - 1] = true;
+    } else if (direction === 'right') {
+      verticals[row][column] = true;
+    }
+    if (direction === 'up') {
+      horizontals[row - 1][column] = true;
+    } else if (direction === 'down') {
+      horizontals[row][column] = true;
+    }
+
+    visitCell(nextRow, nextColumn);
+  }
+
   // Visit that next cell.
 };
 
 visitCell(startRow, startColumn);
-console.log(grid);
+// console.log(grid);

@@ -43,3 +43,29 @@ grid[0][0] = true;
 > <b>Stephen: </b> When you call 'fill', the value you provide is stuffed into the array at every index. In your case, you are providing a single inner array. That single array will be placed at every index of the outer array. The key here is that this is really the same array in memory! So if you change any of the inner arrays, it is essentially like changing all of them (because they are the same arrays). This is definitely not desirable, and is why we use that 'map' statement instead.
 
 &nbsp;
+
+### Notes taken from Updating Horizontal Wall Values comment section:
+
+> <b>Robert:</b> Looking at the <code>shuffle(arr)</code> function, wouldn't it be easier to just choose a random index of the neighbors array?
+
+```js
+const neighbors = [
+  [row - 1, col, 'up'],
+  [row, col + 1, 'right'],
+  [row + 1, col, 'down'],
+  [row, col - 1, 'left'],
+];
+const randomIndex = Math.floor(Math.random() * neighbors.length);
+```
+
+> And then just move to whichever neighbor it chooses?
+
+```js
+if (neighbors[randomIndex][2] === 'left') {
+  verticals[row][col - 1] = true;
+}
+```
+
+> and so on
+
+> <b>Chris:</b> There will be a lot of different ways to accomplish this, but I personally think shuffle would be best. With your option, what happens when that option is out of bounds? You will have a 25% chance of pulling that same direction again. With shuffle, if the first option doesn't work then it can't be pulled again and then it goes to one of the 3 remaining options.

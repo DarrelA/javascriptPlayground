@@ -10,8 +10,40 @@
 
 ## Notes
 
+### Running a Node program as an executable & linking a project.
+
 - ["chmod +x <filename>" to change file permission](https://askubuntu.com/questions/443789/what-does-chmod-x-filename-do-and-how-do-i-use-it)
 - [npm link](https://docs.npmjs.com/cli/v8/commands/npm-link)
+
+- In package.json
+
+```json
+"bin": {
+    "nls": "./nodejs-list/app.js"
+  },
+```
+
+- In nodejs-list folder
+
+```sh
+chmod +x app.js
+npm link
+nls
+```
+
+&nbsp;
+
+### Is it a file or a folder?
+
+```sh
+which node
+```
+
+1. Maintain an array of the results from each lstat. As each callback is invoked, add the stats objecto this arary. When array is full, log everything in it.
+2. Wrap the lstat call with a promise, use async/await syntax to process lstat call one at a time.
+3. Wrap the lstat call with a promise, use async/await + the Promise.all helper method to process lstat calls all at once.
+
+&nbsp;
 
 ### Notes taken from The Callback Pattern in Node comment section:
 

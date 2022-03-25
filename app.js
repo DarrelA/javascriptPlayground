@@ -1,7 +1,7 @@
-const { Engine, Render, Runner, World, Bodies, Body } = Matter;
+const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
 const width = 810;
 const height = 810;
-const cells = 18;
+const cells = 9;
 const unitLength = width / cells;
 
 const engine = Engine.create();
@@ -21,10 +21,10 @@ Render.run(render);
 Runner.run(Runner.create(), engine);
 
 const walls = [
-  Bodies.rectangle(width / 2, 0, width, 1, { isStatic: true }),
-  Bodies.rectangle(width / 2, height, width, 1, { isStatic: true }),
-  Bodies.rectangle(0, height / 2, 1, height, { isStatic: true }),
-  Bodies.rectangle(width, height / 2, 1, height, { isStatic: true }),
+  Bodies.rectangle(width / 2, 0, width, 5, { isStatic: true }),
+  Bodies.rectangle(width / 2, height, width, 5, { isStatic: true }),
+  Bodies.rectangle(0, height / 2, 5, height, { isStatic: true }),
+  Bodies.rectangle(width, height / 2, 5, height, { isStatic: true }),
 ];
 
 World.add(world, walls);
@@ -114,7 +114,7 @@ horizontals.forEach((row, rowIndex) => {
       rowIndex * unitLength + unitLength, // y-axis
       unitLength, // width of a single cell
       6, // height of wall
-      { isStatic: true }
+      { label: 'wall', isStatic: true }
     );
     World.add(world, wall);
   });
@@ -128,7 +128,7 @@ verticals.forEach((row, rowIndex) => {
       rowIndex * unitLength + unitLength / 2,
       6,
       unitLength,
-      { isStatic: true }
+      { label: 'wall', isStatic: true }
     );
     World.add(world, wall);
   });
@@ -139,22 +139,44 @@ const goal = Bodies.rectangle(
   height - unitLength / 2,
   unitLength * 0.4,
   unitLength * 0.4,
-  { isStatic: true }
+  { label: 'goal', isStatic: true }
 );
 World.add(world, goal);
 
-const start = Bodies.circle(unitLength / 2, unitLength / 2, unitLength * 0.2);
+const start = Bodies.circle(unitLength / 2, unitLength / 2, unitLength * 0.2, {
+  label: 'start',
+});
 World.add(world, start);
 
 document.addEventListener('keydown', (event) => {
   const { x, y } = start.velocity;
+  const maxVelocity = 6;
 
   if (event.code === 'KeyW' || event.code === 'ArrowUp')
-    Body.setVelocity(start, { x, y: y - 5 });
+    Body.setVelocity(start, { x, y: Math.max(y - 5, -maxVelocity) });
   if (event.code === 'KeyA' || event.code === 'ArrowLeft')
-    Body.setVelocity(start, { x: x - 5, y });
+    Body.setVelocity(start, { x: Math.max(x - 5, -maxVelocity), y });
   if (event.code === 'KeyS' || event.code === 'ArrowDown')
-    Body.setVelocity(start, { x, y: y + 5 });
+    Body.setVelocity(start, { x, y: Math.min(y + 5, maxVelocity) });
   if (event.code === 'KeyD' || event.code === 'ArrowRight')
-    Body.setVelocity(start, { x: x + 5, y });
+    Body.setVelocity(start, { x: Math.min(x + 5, maxVelocity), y });
+});
+
+// Detecting a win
+Events.on(engine, 'collisionStart', (event) => {
+  event.pairs.forEach((collision) => {
+    const labels = ['start', 'goal'];
+    if (
+      labels.includes(collision.bodyA.label) &&
+      labels.includes(collision.bodyB.label)
+    ) {
+      console.log('Ouch!');
+
+      // Win animation
+      world.gravity.y = 1;
+      world.bodies.forEach((body) => {
+        if (body.label === 'wall') Body.setStatic(body, false);
+      });
+    }
+  });
 });

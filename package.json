@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "./nodejs-list/app.js",
-  "devDependencies": {},
   "scripts": {},
   "repository": {
     "type": "git",
@@ -18,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/DarrelA/javascriptPlayground/issues"
   },
-  "homepage": "https://github.com/DarrelA/javascriptPlayground#readme"
+  "homepage": "https://github.com/DarrelA/javascriptPlayground#readme",
+  "dependencies": {
+    "colors": "^1.4.0"
+  }
 }

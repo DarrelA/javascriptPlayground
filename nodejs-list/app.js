@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const path = require('path');
 const utils = require('util');
+const colors = require('colors');
 
+//#region Solution 1 & 2
 // Basic
 // fs.readdir(process.cwd(), (err, filenames) => {
 //   err ? console.log(err) : console.log(filenames);
@@ -127,21 +130,27 @@ fs.readdir(process.cwd(), async (err, filenames) => {
   }
 });
 */
+//#endregion
 
 // ************************************************************************************************** //
 
 // Solution 3 - Best
 
 const { lstat } = fs.promises;
+const targetDir = process.argv[2] || process.cwd();
 
-fs.readdir(process.cwd(), async (err, filenames) => {
+fs.readdir(targetDir, async (err, filenames) => {
   if (err) console.log(err);
 
-  const statPromises = filenames.map((filename) => lstat(filename));
+  const statPromises = filenames.map((filename) =>
+    lstat(path.join(targetDir, filename))
+  );
   const allStats = await Promise.all(statPromises);
   for (const stats of allStats) {
     const index = allStats.indexOf(stats);
-    console.log(filenames[index], stats.isFile());
+
+    if (stats.isFile()) console.log(filenames[index]);
+    else console.log(filenames[index].rainbow);
   }
 });
 

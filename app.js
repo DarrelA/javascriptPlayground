@@ -2,7 +2,7 @@ const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
 
 const width = window.innerWidth;
 const height = window.innerHeight;
-const cellsHorizontal = 36;
+const cellsHorizontal = 30;
 const cellsVertical = Math.floor(cellsHorizontal / 2);
 const unitLengthX = width / cellsHorizontal;
 const unitLengthY = height / cellsVertical;
@@ -14,7 +14,7 @@ const render = Render.create({
   element: document.body,
   engine: engine,
   options: {
-    wireframes: true,
+    wireframes: false,
     width,
     height,
   },
@@ -117,7 +117,7 @@ horizontals.forEach((row, rowIndex) => {
       rowIndex * unitLengthY + unitLengthY, // y-axis
       unitLengthX, // width of a single cell
       6, // height of wall
-      { label: 'wall', isStatic: true }
+      { label: 'wall', isStatic: true, render: { fillStyle: 'Goldenrod' } }
     );
     World.add(world, wall);
   });
@@ -131,7 +131,7 @@ verticals.forEach((row, rowIndex) => {
       rowIndex * unitLengthY + unitLengthY / 2,
       6,
       unitLengthY,
-      { label: 'wall', isStatic: true }
+      { label: 'wall', isStatic: true, render: { fillStyle: 'Goldenrod' } }
     );
     World.add(world, wall);
   });
@@ -142,7 +142,7 @@ const goal = Bodies.rectangle(
   height - unitLengthY / 2,
   unitLengthX * 0.4,
   unitLengthY * 0.4,
-  { label: 'goal', isStatic: true }
+  { label: 'goal', isStatic: true, render: { fillStyle: 'MediumSeaGreen' } }
 );
 World.add(world, goal);
 
@@ -150,7 +150,7 @@ const start = Bodies.circle(
   unitLengthX / 2,
   unitLengthY / 2,
   (Math.min(unitLengthX, unitLengthY) / 2) * 0.2, // radius of circle
-  { label: 'start' }
+  { label: 'start', render: { fillStyle: 'SteelBlue' } }
 );
 World.add(world, start);
 
@@ -177,6 +177,7 @@ Events.on(engine, 'collisionStart', (event) => {
       labels.includes(collision.bodyB.label)
     ) {
       console.log('Ouch!');
+      document.querySelector('.winner').classList.remove('hidden');
 
       // Win animation
       world.gravity.y = 1;

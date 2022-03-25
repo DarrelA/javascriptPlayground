@@ -2,6 +2,7 @@ const { Engine, Render, Runner, World, Bodies } = Matter;
 const width = 600;
 const height = 600;
 const cells = 3;
+const unitLength = width / cells;
 
 const engine = Engine.create();
 const { world } = engine;
@@ -98,9 +99,36 @@ const visitCell = (row, column) => {
 
     visitCell(nextRow, nextColumn);
   }
-
-  // Visit that next cell.
 };
 
 visitCell(startRow, startColumn);
-// console.log(grid);
+
+// false = wall & true = no wall
+horizontals.forEach((row, rowIndex) => {
+  row.forEach((open, columnIndex) => {
+    if (open === true) return; // do not draw wall
+    const wall = Bodies.rectangle(
+      // unitLength / 2 to get center point
+      columnIndex * unitLength + unitLength / 2, // x-axis
+      rowIndex * unitLength + unitLength, // y-axis
+      unitLength, // width of a single cell
+      10, // height of wall
+      { isStatic: true }
+    );
+    World.add(world, wall);
+  });
+});
+
+verticals.forEach((row, rowIndex) => {
+  row.forEach((open, columnIndex) => {
+    if (open === true) return;
+    const wall = Bodies.rectangle(
+      columnIndex * unitLength + unitLength,
+      rowIndex * unitLength + unitLength / 2,
+      10,
+      unitLength,
+      { isStatic: true }
+    );
+    World.add(world, wall);
+  });
+});

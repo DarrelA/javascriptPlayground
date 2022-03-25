@@ -1,8 +1,11 @@
 const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
-const width = 810;
-const height = 810;
-const cells = 9;
-const unitLength = width / cells;
+
+const width = window.innerWidth;
+const height = window.innerHeight;
+const cellsHorizontal = 36;
+const cellsVertical = Math.floor(cellsHorizontal / 2);
+const unitLengthX = width / cellsHorizontal;
+const unitLengthY = height / cellsVertical;
 
 const engine = Engine.create();
 engine.world.gravity.y = 0;
@@ -43,20 +46,20 @@ const shuffle = (arr) => {
   return arr;
 };
 
-const grid = Array(cells) // row
+const grid = Array(cellsVertical) // row
   .fill(null)
-  .map(() => Array(cells).fill(false)); // column
+  .map(() => Array(cellsHorizontal).fill(false)); // column
 
-const verticals = Array(cells)
+const verticals = Array(cellsVertical)
   .fill(null)
-  .map(() => Array(cells - 1).fill(false));
+  .map(() => Array(cellsHorizontal - 1).fill(false));
 
-const horizontals = Array(cells - 1)
+const horizontals = Array(cellsVertical - 1)
   .fill(null)
-  .map(() => Array(cells).fill(false));
+  .map(() => Array(cellsHorizontal).fill(false));
 
-const startRow = Math.floor(Math.random() * cells);
-const startColumn = Math.floor(Math.random() * cells);
+const startRow = Math.floor(Math.random() * cellsVertical);
+const startColumn = Math.floor(Math.random() * cellsHorizontal);
 
 const visitCell = (row, column) => {
   if (grid[row][column]) return; // Already visited.
@@ -76,9 +79,9 @@ const visitCell = (row, column) => {
     // Check if that neighbor is out of bounds.
     if (
       nextRow < 0 ||
-      nextRow >= cells ||
+      nextRow >= cellsVertical ||
       nextColumn < 0 ||
-      nextColumn >= cells
+      nextColumn >= cellsHorizontal
     )
       continue;
 
@@ -110,9 +113,9 @@ horizontals.forEach((row, rowIndex) => {
     if (open === true) return; // do not draw wall
     const wall = Bodies.rectangle(
       // unitLength / 2 to get center point
-      columnIndex * unitLength + unitLength / 2, // x-axis
-      rowIndex * unitLength + unitLength, // y-axis
-      unitLength, // width of a single cell
+      columnIndex * unitLengthX + unitLengthX / 2, // x-axis
+      rowIndex * unitLengthY + unitLengthY, // y-axis
+      unitLengthX, // width of a single cell
       6, // height of wall
       { label: 'wall', isStatic: true }
     );
@@ -124,10 +127,10 @@ verticals.forEach((row, rowIndex) => {
   row.forEach((open, columnIndex) => {
     if (open === true) return;
     const wall = Bodies.rectangle(
-      columnIndex * unitLength + unitLength,
-      rowIndex * unitLength + unitLength / 2,
+      columnIndex * unitLengthX + unitLengthX,
+      rowIndex * unitLengthY + unitLengthY / 2,
       6,
-      unitLength,
+      unitLengthY,
       { label: 'wall', isStatic: true }
     );
     World.add(world, wall);
@@ -135,17 +138,20 @@ verticals.forEach((row, rowIndex) => {
 });
 
 const goal = Bodies.rectangle(
-  width - unitLength / 2,
-  height - unitLength / 2,
-  unitLength * 0.4,
-  unitLength * 0.4,
+  width - unitLengthX / 2,
+  height - unitLengthY / 2,
+  unitLengthX * 0.4,
+  unitLengthY * 0.4,
   { label: 'goal', isStatic: true }
 );
 World.add(world, goal);
 
-const start = Bodies.circle(unitLength / 2, unitLength / 2, unitLength * 0.2, {
-  label: 'start',
-});
+const start = Bodies.circle(
+  unitLengthX / 2,
+  unitLengthY / 2,
+  (Math.min(unitLengthX, unitLengthY) / 2) * 0.2, // radius of circle
+  { label: 'start' }
+);
 World.add(world, start);
 
 document.addEventListener('keydown', (event) => {

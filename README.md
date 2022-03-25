@@ -2,7 +2,7 @@
 
 - The Modern Javascript Bootcamp Course (2022)
 - The most up-to-date JS resource online! Master Javascript by building a beautiful portfolio of projects!
-- Tutorial for Maze Game with matter.js (JavaScript with Canvas API)
+- Tutorial for Maze Game with matter.js (JavaScript with Canvas API) ([GitHub Page Demo](https://darrelasandbox.github.io/javascript-maze-game-with-matterjs/))
 - [Colt Steele](https://github.com/Colt)
 - [Stephen Grider](https://github.com/StephenGrider)
 

@@ -1,10 +1,11 @@
-const { Engine, Render, Runner, World, Bodies } = Matter;
-const width = 600;
-const height = 600;
-const cells = 3;
+const { Engine, Render, Runner, World, Bodies, Body } = Matter;
+const width = 810;
+const height = 810;
+const cells = 18;
 const unitLength = width / cells;
 
 const engine = Engine.create();
+engine.world.gravity.y = 0;
 const { world } = engine;
 const render = Render.create({
   element: document.body,
@@ -20,10 +21,10 @@ Render.run(render);
 Runner.run(Runner.create(), engine);
 
 const walls = [
-  Bodies.rectangle(width / 2, 0, width, 40, { isStatic: true }),
-  Bodies.rectangle(width / 2, height, width, 40, { isStatic: true }),
-  Bodies.rectangle(0, height / 2, 40, height, { isStatic: true }),
-  Bodies.rectangle(width, height / 2, 40, height, { isStatic: true }),
+  Bodies.rectangle(width / 2, 0, width, 1, { isStatic: true }),
+  Bodies.rectangle(width / 2, height, width, 1, { isStatic: true }),
+  Bodies.rectangle(0, height / 2, 1, height, { isStatic: true }),
+  Bodies.rectangle(width, height / 2, 1, height, { isStatic: true }),
 ];
 
 World.add(world, walls);
@@ -112,7 +113,7 @@ horizontals.forEach((row, rowIndex) => {
       columnIndex * unitLength + unitLength / 2, // x-axis
       rowIndex * unitLength + unitLength, // y-axis
       unitLength, // width of a single cell
-      10, // height of wall
+      6, // height of wall
       { isStatic: true }
     );
     World.add(world, wall);
@@ -125,10 +126,35 @@ verticals.forEach((row, rowIndex) => {
     const wall = Bodies.rectangle(
       columnIndex * unitLength + unitLength,
       rowIndex * unitLength + unitLength / 2,
-      10,
+      6,
       unitLength,
       { isStatic: true }
     );
     World.add(world, wall);
   });
+});
+
+const goal = Bodies.rectangle(
+  width - unitLength / 2,
+  height - unitLength / 2,
+  unitLength * 0.4,
+  unitLength * 0.4,
+  { isStatic: true }
+);
+World.add(world, goal);
+
+const start = Bodies.circle(unitLength / 2, unitLength / 2, unitLength * 0.2);
+World.add(world, start);
+
+document.addEventListener('keydown', (event) => {
+  const { x, y } = start.velocity;
+
+  if (event.code === 'KeyW' || event.code === 'ArrowUp')
+    Body.setVelocity(start, { x, y: y - 5 });
+  if (event.code === 'KeyA' || event.code === 'ArrowLeft')
+    Body.setVelocity(start, { x: x - 5, y });
+  if (event.code === 'KeyS' || event.code === 'ArrowDown')
+    Body.setVelocity(start, { x, y: y + 5 });
+  if (event.code === 'KeyD' || event.code === 'ArrowRight')
+    Body.setVelocity(start, { x: x + 5, y });
 });

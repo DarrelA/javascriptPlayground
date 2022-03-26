@@ -8,6 +8,18 @@
 
 &nbsp;
 
+## Installation
+
+1. Install NPM packages.
+
+```sh
+npm install
+```
+
+2. Rename '.env.template' to '.env' and put your own COOKIE_KEY.
+
+&nbsp;
+
 ## Notes
 
 #### Parsing Form Data
@@ -72,5 +84,29 @@ app.post('/', bodyParser, (req, res) => {
 > <b>Alejandra: </b>Different Data Modeling Approaches
 
 > <b>Stephen: </b>Depends on how you are interfacing with Mongodb. If you're using the mongodb driver directly, that thing follows the repository approach. If you are working with mongodb using mongooseJS, that uses the ActiveRecord approach.
+
+&nbsp;
+
+### Notes taken from Cookie Based Authentication comment section:
+
+> <b>Clayton: </b>Cookies vs. JWT
+
+> <b>Kamil: </b>Very debatable topic. No matter what content you consume around web auth and JWT, a recurring theme seems to re-surface time and time again. Given its current architecture, JWT will not replace the robustness of session + cookie based authentication. There, I wrote it.
+
+> In all seriousness, though, JW tokens tokens are great but suitable for a very particular use-case. For instance, inter service communication (micro-service architecture). Generating short-lived links (download buttons to initiate a downloading process etc)
+
+> The key factor is that the token's purpose has to be controlled tightly eg - short lived duration , duration must be short-lived. In terms of user authentication flow, I may consider using JWT when generating short-lived , one-off tokens , for example, during password reset flow or something like that . For everything else, I use sessions + cookies
+
+> I am including a few resources for you :
+
+- [General Authentication on the web](https://www.youtube.com/watch?v=2PPSXonhIck)
+- [Node JS Auth -- may seem familiar to people coming from Colt's web developer bootcamp](https://www.youtube.com/watch?v=i7of02icPyQ)
+
+Articles:
+
+1. http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/
+2. http://cryto.net/~joepie91/blog/2016/06/19/stop-using-jwt-for-sessions-part-2-why-your-solution-doesnt-work/
+3. https://www.ducktypelabs.com/5-mistakes-web-developers-should-avoid-when-using-jwts-for-authentication/
+4. https://hasura.io/blog/best-practices-of-using-jwt-with-graphql/#jwt_security
 
 &nbsp;

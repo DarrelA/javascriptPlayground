@@ -1,24 +1,18 @@
 {
-  "name": "playground-javascript",
+  "name": "nodejs-watchit",
   "version": "1.0.0",
   "description": "",
   "main": "./nodejs-list/app.js",
   "scripts": {},
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DarrelA/javascriptPlayground.git"
+    "type": "git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bin": {
-    "nls": "./nodejs-list/app.js",
     "watchit": "./nodejs-watchit/app.js"
   },
-  "bugs": {
-    "url": "https://github.com/DarrelA/javascriptPlayground/issues"
-  },
-  "homepage": "https://github.com/DarrelA/javascriptPlayground#readme",
   "dependencies": {
     "caporal": "^1.4.0",
     "chokidar": "^3.5.3",

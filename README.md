@@ -110,3 +110,110 @@ Articles:
 4. https://hasura.io/blog/best-practices-of-using-jwt-with-graphql/#jwt_security
 
 &nbsp;
+
+### Notes taken from Salting Passwords comment section:
+
+- [NodeJS: bcrypt vs native crypto](https://stackoverflow.com/questions/6951867/nodejs-bcrypt-vs-native-crypto)
+- [Rainbow Table](https://en.wikipedia.org/wiki/Rainbow_table)
+
+> <b>Arik: </b>Stephen suggests concatenating the salt value to the hashed value and separating these 2 values with a delimiter (like '/', etc.). The concatenated value should be saved in the database. My question is what happens if the data base is compromised and an attacker gets access to the concatenated value. Wouldn't it be pretty straight forward for the attacker to try either of the values as a salt (remember that these values are visually separated by a delimiter)?
+
+> <b>Stephen: </b>Remember the purpose of the salt - it defeats a 'rainbow table' attack. If the attacker knows the salt, then they would still have to create a rainbow table from scratch and try to look up the users password with it. That process would be really computationally expensive for an attacker, which is the primary goal of including the salt.
+
+> <b>Arik: </b>Thank you Stephen for the prompt response! Could you please describe the steps that the attacker will have to follow in order to build the rainbow table from scratch once he knows the salt?
+
+> <b>Stephen: </b>
+
+```js
+const crypto = require('crypto');
+
+const hashedAndSalted =
+  '4211bfcad8d3def24d04b9d88d4a08cdff7fefab77974c86e0e9394ae1ab9a6061f2dbf6d3389f3e9aa870f65e9070e88537f7f89af3d861705c89b46558a342.76e8d9f3f6b98cd7';
+
+const commonPasswords = [
+  '123456',
+  'password',
+  '123456789',
+  '12345678',
+  '12345',
+  '111111',
+  '1234567',
+  'sunshine',
+  'qwerty',
+  'iloveyou',
+  'princess',
+  'admin',
+  'welcome',
+  '666666',
+  'abc123',
+  'football',
+  '123123',
+  'monkey',
+  '654321',
+  '!@#$ %^&*',
+  'charlie',
+  'aa123456',
+  'donald',
+  'password1',
+  'qwerty123',
+];
+
+const [hash, salt] = hashedAndSalted.split('.');
+const table = {};
+
+for (let pw of commonPasswords) {
+  const commonHash = crypto.scryptSync(pw, salt, 64).toString('hex');
+  table[commonHash] = pw;
+}
+
+if (table[hash]) {
+  console.log(`Found pw = ${table[hash]}`);
+} else {
+  console.log('Could not find a matching pw');
+}
+```
+
+> 'hashedAndSalted' is one of the hashed + salted passwords that I used in the real project. That's the PW we are trying to guess. The 'commonPasswords' array is a list of the 25 most common passwords used (form here: https://en.wikipedia.org/wiki/List_of_the_most_common_passwords). My real password was...."password", so it definitely shows up in that list.
+
+> <b>Arik: </b> First thing - I really appreciate the great support that you are providing! If we go back to my original question, by using salt we make the attacker hash each common password N times (where N is the number of password entries in the database, once for each unique salt). This will increase the complexity of building the rainbow table by the factor of N. And thus additional computational resources (especially in the event of a high number of users in the system). Am I correct?
+
+> <b>Stephen: </b> Yep, you are 100% correct.
+
+&nbsp;
+
+### Notes taken from Salting Passwords comment section:
+
+> <b>Kaustav: </b> Why are we using promise based version of scrypt using utils.promisify ???
+
+> <b>kamil: </b> Crypto.scrypt() is an asynchronous method. By default, this method adheres to callback-pattern that is typical in Node JS environment. Why would we want to promisify it ? ----> to maintain code flow
+
+> In short, to mitigate callback-hell and prevent potential with scope and timing-issues ,where parts of your code depend upon previous outcomes ,we can consider using async await alternative.
+
+```js
+ try {
+      const records = await this.getAll();
+      const salt = crypto.randomBytes(10).toString("hex");
+      const buf = await scrypt(attrs.password, salt, 64);
+        ^---^---^
+        first part
+      const record = {
+        ...attrs,
+        id: this.assignRandomId(),
+        password: `${buf.toString("hex")}.${salt}`,
+       ^---^---^
+        second part, depending upon outcome of the first
+      };
+      records.push(record);
+        ^---^---^
+        third part, depending upon outcome of the second
+      return record;
+    } catch (error) {}
+```
+
+> scrypt ,when successful , returns a buffer , which ,in turn, gets converted into hexadecimal format for readability. Eventually, this hexadecimal value gets stored inside your user record. The newly-updated user record is returned back to us. Can you see how different aspects of your code inter-relate ? ( I have highlighted the 3 parts in code )
+
+> 1. With callback-based solution, preserving code flow could get messy real quick.
+> 2. This is where Async await can help us maintain our sanity.
+> 3. But for async await to work, we must promisify the scrypt function
+
+&nbsp;

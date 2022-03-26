@@ -1,4 +1,5 @@
 const fs = require('fs');
+const crypto = require('crypto');
 
 class UsersRepository {
   constructor(filename) {
@@ -14,20 +15,34 @@ class UsersRepository {
   }
 
   async getAll() {
-    const contents = await fs.promises.readFile(this.filename, {
-      encoding: 'utf8',
-    });
-    console.log(typeof contents); // string
-    const data = JSON.parse(contents);
-    return data;
+    return JSON.parse(await fs.promises.readFile(this.filename));
+  }
+
+  async create(attributes) {
+    attributes.id = this.randomId();
+    const records = await this.getAll();
+    records.push(attributes);
+    await this.writeAll(records);
+  }
+
+  async writeAll(records) {
+    await fs.promises.writeFile(
+      this.filename,
+      JSON.stringify(records, null, 2) // JSON.stringify(value, replacer, space)
+    );
+  }
+
+  randomId() {
+    return crypto.randomBytes(10).toString('hex');
   }
 }
 
 // Top-level await only works with ESM modules
 const test = async () => {
   const repo = new UsersRepository('users.json');
+  await repo.create({ email: 'mongkong@mongmail.com', password: 'password' });
   const users = await repo.getAll();
-  console.log(typeof users); // object
+  console.log(users);
 };
 
 test();

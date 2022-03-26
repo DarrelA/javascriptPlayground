@@ -9,7 +9,7 @@ require('dotenv').config();
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieSession({ keys: [process.env.COOKIE_KEY] }));
 
-app.get('/', (req, res) =>
+app.get('/signup', (req, res) =>
   res.send(/* html*/ `
     <div>
     Your id is ${req.session.userId}
@@ -32,7 +32,7 @@ app.get('/', (req, res) =>
 `)
 );
 
-app.post('/', async (req, res) => {
+app.post('/signup', async (req, res) => {
   const { email, password, passwordConfirmation } = req.body;
   const existingUser = await usersRepo.getOneBy({ email });
   if (existingUser) return res.status(400).send('Email is taken.');
@@ -43,6 +43,38 @@ app.post('/', async (req, res) => {
   req.session.userId = user.id; // Cookie session
 
   res.send('Account created!');
+});
+
+app.get('/signout', (req, res) => {
+  req.session = null;
+  res.send('You are logged out.');
+});
+
+app.get('/signin', (req, res) => {
+  res.send(/*html*/ `
+    <div>
+      <form method="POST">
+        <input 
+          name="email"
+          type="text"
+          placeholder="email" />
+        <input 
+          name="password"
+          type="password"
+          placeholder="password" />
+        <button>Sign In</button>
+      </form>
+    </div>
+    `);
+});
+
+app.post('/signin', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await usersRepo.getOneBy({ email });
+  if (!user) return res.send('Email not found.');
+  if (user.password !== password) return res.send('Invalid password.');
+  req.session.userId = user.id;
+  res.send('Welcome back!');
 });
 
 app.listen(port, () => console.log(`E-Commerce app listening on port ${port}`));

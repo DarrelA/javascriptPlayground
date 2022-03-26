@@ -69,23 +69,4 @@ class UsersRepository {
   }
 }
 
-// Top-level await only works with ESM modules
-const test = async () => {
-  const repo = new UsersRepository('users.json');
-  //   await repo.create({ email: 'mongkong@mongmail.com', password: 'password' });
-  //   console.log(await repo.getAll());
-  //   console.log(await repo.getOne('8e9c3273b9406066e7f'));
-  //   await repo.delete('f387b6c308aa43cff795');
-  //   await repo.update('f822c6c18be4a5e47270', { password: 'password' });
-
-  console.log(
-    await repo.getOneBy({
-      //   id: '7bbabfe883d6bdeaa2db',
-      //   email: 'mongkong@mongmail.com',
-      //   password: 'password',
-      ad: undefined,
-    })
-  );
-};
-
-test();
+module.exports = new UsersRepository('users.json');

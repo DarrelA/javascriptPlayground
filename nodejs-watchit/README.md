@@ -16,6 +16,12 @@
 watchit -h
 ```
 
+<code>{ stdio: 'inherit' }</code> forwards output infomation to Process from Child Process
+
+![stdio](stdio.png)
+
+&nbsp;
+
 ### Project Setup before writing watchit app.
 
 - Same setup process as nodejs-list.

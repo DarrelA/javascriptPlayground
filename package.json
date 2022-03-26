@@ -1,0 +1,15 @@
+{
+  "name": "ecommerce-shopper",
+  "version": "1.0.0",
+  "description": "- The Modern Javascript Bootcamp Course (2022) - The most up-to-date JS resource online! Master Javascript by building a beautiful portfolio of projects! - Tutorial for - [Colt Steele](https://github.com/Colt) - [Stephen Grider](https://github.com/StephenGrider)",
+  "main": "app.js",
+  "scripts": {
+    "start": "npx nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}

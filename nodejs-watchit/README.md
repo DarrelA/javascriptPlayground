@@ -20,6 +20,28 @@ watchit -h
 
 ![stdio](stdio.png)
 
+|          | Shell? | Stream? |
+| :------: | :----: | :-----: |
+|   exec   |  yes   |   no    |
+| execFile |   no   |   no    |
+|  spawn   |   no   |   yes   |
+|   fork   |   no   |   yes   |
+
+- Pass options to spawn to behave like exec, execFile or fork.
+- [spawn command args-options](https://nodejs.org/dist/latest-v16.x/docs/api/child_process.html#child_processspawncommand-args-options)
+
+&nbsp;
+
+### Terminal & shell
+
+- <code>cat</code> and <code>wc</code> is two different programs.
+
+```sh
+cat app.js | wc -l
+```
+
+![stream](shell-stream.png)
+
 &nbsp;
 
 ### Project Setup before writing watchit app.

@@ -81,6 +81,29 @@ app.post('/', bodyParser, (req, res) => {
 
 &nbsp;
 
+### Express-Validator package Error Handlaing
+
+- [mapped()](https://express-validator.github.io/docs/validation-result-api.html)
+- <b>Gotcha: </b>Cannot read property msg of property undefined or something similiar when there is no error with email.
+  - Refer to <code>signup.js</code> for the try...catch solution.
+
+```js
+const getError = (errors, props) => {
+  if (errors) return errors.mapped()[props].msg;
+  // errors.mapped() ===
+  //   {
+  //     password: {
+  //       msg: 'Password too short',
+  //     },
+  //     passwordConfirmation: {
+  //       msg: 'Passwordmust match',
+  //     },
+  //   };
+};
+```
+
+&nbsp;
+
 ### Notes taken from Different Data Modeling Approaches comment section:
 
 > <b>Alejandra: </b>Different Data Modeling Approaches

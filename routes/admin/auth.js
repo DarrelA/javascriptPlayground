@@ -28,13 +28,13 @@ router.post(
     const { email, password } = req.body;
     const user = await usersRepo.create({ email, password });
     req.session.userId = user.id; // Cookie session
-    res.send('Account created!');
+    res.redirect('/admin/products');
   }
 );
 
 router.get('/signout', (req, res) => {
   req.session = null;
-  res.send('You are logged out.');
+  res.redirect('/signin');
 });
 
 router.get('/signin', (req, res) => res.send(signinTemplate({})));
@@ -52,7 +52,7 @@ router.post(
     const { email } = req.body;
     const user = await usersRepo.getOneBy({ email });
     req.session.userId = user.id;
-    res.send('Welcome back!');
+    res.redirect('/admin/products');
   }
 );
 

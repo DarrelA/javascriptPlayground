@@ -1,6 +1,6 @@
 const express = require('express');
-const { validationResult } = require('express-validator');
 
+const { handleErrors } = require('./middlewares');
 const usersRepo = require('../../repositories/users');
 const signupTemplate = require('../../views/admin/auth/signup');
 const signinTemplate = require('../../views/admin/auth/signin');
@@ -22,14 +22,11 @@ router.post(
   requireEmail,
   requirePassword,
   requirePasswordConfirmation,
+  handleErrors(signupTemplate),
 
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.send(signupTemplate({ req, errors }));
-
     const { email, password } = req.body;
     const user = await usersRepo.create({ email, password });
-
     req.session.userId = user.id; // Cookie session
     res.send('Account created!');
   }
@@ -49,14 +46,11 @@ router.post(
   '/signin',
   requireLoginEmail,
   requireLoginPassword,
+  handleErrors(signinTemplate),
 
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.send(signinTemplate({ errors }));
-
     const { email } = req.body;
     const user = await usersRepo.getOneBy({ email });
-
     req.session.userId = user.id;
     res.send('Welcome back!');
   }

@@ -1,4 +1,6 @@
 const express = require('express');
+const { check, validationResult } = require('express-validator');
+
 const usersRepo = require('../../repositories/users');
 const signupTemplate = require('../../views/admin/auth/signup');
 const signinTemplate = require('../../views/admin/auth/signin');
@@ -8,18 +10,42 @@ const router = express.Router();
 // Pass req object as argument.
 router.get('/signup', (req, res) => res.send(signupTemplate({ req })));
 
-router.post('/signup', async (req, res) => {
-  const { email, password, passwordConfirmation } = req.body;
-  const existingUser = await usersRepo.getOneBy({ email });
-  if (existingUser) return res.status(400).send('Email is taken.');
-  if (password !== passwordConfirmation)
-    return res.status(400).send('Password must match.');
+router.post(
+  '/signup',
 
-  const user = await usersRepo.create({ email, password });
-  req.session.userId = user.id; // Cookie session
+  check('email')
+    .trim()
+    .isEmail()
+    .normalizeEmail()
+    .custom(async (email) => {
+      const existingUser = await usersRepo.getOneBy({ email });
+      if (existingUser) throw new Error('Email is taken');
+    }),
 
-  res.send('Account created!');
-});
+  check('password')
+    .trim()
+    .isLength({ min: 6, max: 30 })
+    .withMessage('Password must be between 6 and 30 characters'),
+
+  check('passwordConfirmation').custom(
+    async (passwordConfirmation, { req }) => {
+      if (passwordConfirmation !== req.body.password)
+        throw new Error('Password must match');
+    }
+  ),
+
+  async (req, res) => {
+    const errors = validationResult(req);
+    console.log(errors);
+
+    const { email, password } = req.body;
+
+    const user = await usersRepo.create({ email, password });
+    req.session.userId = user.id; // Cookie session
+
+    res.send('Account created!');
+  }
+);
 
 router.get('/signout', (req, res) => {
   req.session = null;

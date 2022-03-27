@@ -22,6 +22,8 @@ npm install
 
 ## Notes
 
+- [npm "validator" vs "express-validator"](https://stackoverflow.com/questions/49748710/npm-validator-vs-express-validator#:~:text=validator%20is%20a%20library%20to,the%20box%20using%20validator%20lib.)
+
 #### Parsing Form Data
 
 - <code>req.on() is similiar to addEventListener()</code>
@@ -185,7 +187,7 @@ if (table[hash]) {
 
 > <b>Kaustav: </b> Why are we using promise based version of scrypt using utils.promisify ???
 
-> <b>kamil: </b> Crypto.scrypt() is an asynchronous method. By default, this method adheres to callback-pattern that is typical in Node JS environment. Why would we want to promisify it ? ----> to maintain code flow
+> <b>Kamil: </b> Crypto.scrypt() is an asynchronous method. By default, this method adheres to callback-pattern that is typical in Node JS environment. Why would we want to promisify it ? ----> to maintain code flow
 
 > In short, to mitigate callback-hell and prevent potential with scope and timing-issues ,where parts of your code depend upon previous outcomes ,we can consider using async await alternative.
 
@@ -215,5 +217,39 @@ if (table[hash]) {
 > 1. With callback-based solution, preserving code flow could get messy real quick.
 > 2. This is where Async await can help us maintain our sanity.
 > 3. But for async await to work, we must promisify the scrypt function
+
+&nbsp;
+
+### Notes taken from Adding Custom Validators comment section:
+
+> <b>Beata: </b> .withMessage()
+
+> <b>Kamil: </b> I want to take this opportunity to expand upon the location where to attach withMessage() method. It can <b>only</b> be chained to a <b>validator</b> - either custom or built-in. <b>withMessage() method cannot be chained onto a sanitiser.</b>
+
+> Whenever you are transforming the value, you are using a sanitiser:
+
+> - trim()
+> - normalizeEmail()
+> - toFloat()
+
+> Whenever you find yourself posing questions about the value, you are using a validator
+
+> - isEmail()
+> - isLength()
+> - isIBAN()
+> - custom()
+
+> A good rule of thumb is to transform data first then ask questions about the validity of their freshly-transformed state.
+
+> - check("email")
+> - trim() <--transform value
+> - normalizeEmail() <-- transform value
+> - isEmail() <-- ask questions about the value
+
+&nbsp;
+
+> <b>Mattia: </b>I have learned before that validation should be done in the model side of the app per the principle of "fat models and slim controllers". Why then adding all this logic in the controller? It seems bad to me, am I wrong?
+
+> <b>Stephen: </b>Ideally, we would have two levels of validation - one for data coming into a route handler, and one around saving records. It is important to have validation on data coming into the route handler, as it will keep us from running a bunch of logic only to later find out that some input the user provided is not valid.
 
 &nbsp;

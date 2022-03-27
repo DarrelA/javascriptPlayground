@@ -23,6 +23,7 @@ npm install
 ## Notes
 
 - [npm "validator" vs "express-validator"](https://stackoverflow.com/questions/49748710/npm-validator-vs-express-validator#:~:text=validator%20is%20a%20library%20to,the%20box%20using%20validator%20lib.)
+- [MDN FormData API](https://developer.mozilla.org/en-US/docs/Web/API/FormData)
 
 #### Parsing Form Data
 
@@ -81,7 +82,7 @@ app.post('/', bodyParser, (req, res) => {
 
 &nbsp;
 
-### Express-Validator package Error Handlaing
+### Express-Validator package Error Handling
 
 - [mapped()](https://express-validator.github.io/docs/validation-result-api.html)
 - <b>Gotcha: </b>Cannot read property msg of property undefined or something similiar when there is no error with email.
@@ -101,6 +102,26 @@ const getError = (errors, props) => {
   //   };
 };
 ```
+
+&nbsp;
+
+### 4 Different Methods of Image Storage
+
+- Load Balancer <b>randomly</b> assign to server.
+
+1. Co-Located Disk (Cannot scale the application with multiple servers.)
+2. Database (Cost is high)
+   - [AWS Amazon RDS for PostgreSQL Database Storage](https://aws.amazon.com/rds/postgresql/pricing/)
+   - [imgur statistics](https://expandedramblings.com/index.php/imgur-statistics/)
+   - [Amazon S3](https://aws.amazon.com/s3/pricing/?nc=sn&loc=4)
+3. Stream through to Datastore (Outside Data Store for Files)
+   - Much cheaper than Database approach.
+   - Amazon S3, Digital Ocean Spaces, Google Cloud Storage.
+   - However servers are still required to process the image before uploading to datastore.
+4. Presigned URL (Best but complicated)
+   - Browser make initial request to server to upload file.
+   - Server will response with presigned URL with a configuration.
+   - Give user a 1 time access to the datastore to upload the image(s).
 
 &nbsp;
 

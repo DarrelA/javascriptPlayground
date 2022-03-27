@@ -5,11 +5,11 @@ const usersRepo = require('../../repositories/users');
 const signupTemplate = require('../../views/admin/auth/signup');
 const signinTemplate = require('../../views/admin/auth/signin');
 const {
-  requiredEmail,
-  requiredPassword,
-  requiredPasswordConfirmation,
-  authenticateEmail,
-  authenticatePassword,
+  requireEmail,
+  requirePassword,
+  requirePasswordConfirmation,
+  requireLoginEmail,
+  requireLoginPassword,
 } = require('./validators');
 
 const router = express.Router();
@@ -19,9 +19,9 @@ router.get('/signup', (req, res) => res.send(signupTemplate({ req })));
 
 router.post(
   '/signup',
-  requiredEmail,
-  requiredPassword,
-  requiredPasswordConfirmation,
+  requireEmail,
+  requirePassword,
+  requirePasswordConfirmation,
 
   async (req, res) => {
     const errors = validationResult(req);
@@ -47,8 +47,8 @@ router.get('/signin', (req, res) => res.send(signinTemplate({})));
 
 router.post(
   '/signin',
-  authenticateEmail,
-  authenticatePassword,
+  requireLoginEmail,
+  requireLoginPassword,
 
   async (req, res) => {
     const errors = validationResult(req);

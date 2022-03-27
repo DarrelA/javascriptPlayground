@@ -13,7 +13,7 @@ module.exports = {
     .isFloat({ min: 1 })
     .withMessage('Must be a number greater than 1'),
 
-  requiredEmail: check('email')
+  requireEmail: check('email')
     .trim()
     .isEmail()
     .normalizeEmail()
@@ -22,19 +22,19 @@ module.exports = {
       if (existingUser) throw new Error('Email is taken');
     }),
 
-  requiredPassword: check('password')
+  requirePassword: check('password')
     .trim()
     .isLength({ min: 6, max: 30 })
     .withMessage('Password must be between 6 and 30 characters'),
 
-  requiredPasswordConfirmation: check('passwordConfirmation').custom(
+  requirePasswordConfirmation: check('passwordConfirmation').custom(
     async (passwordConfirmation, { req }) => {
       if (passwordConfirmation !== req.body.password)
         throw new Error('Password must match');
     }
   ),
 
-  authenticateEmail: check('email')
+  requireLoginEmail: check('email')
     .trim()
     .normalizeEmail()
     .isEmail()
@@ -44,7 +44,7 @@ module.exports = {
       if (!user) throw new Error('Email not found');
     }),
 
-  authenticatePassword: check('password')
+  requireLoginPassword: check('password')
     .trim()
     .custom(async (password, { req }) => {
       const user = await usersRepo.getOneBy({ email: req.body.email });

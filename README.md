@@ -125,6 +125,20 @@ const getError = (errors, props) => {
 
 &nbsp;
 
+### Understanding a Shopping Cart
+
+- Problems:
+
+  1. How do we tie a cart to a person who will never be logged in?
+  2. Even if we can identify who is trying to add an item to a cart, how do we tie a product to a cart?
+
+- Solutions
+  1. Save cart id in cookie and products repository. This means we have to iterate through all products to figure out what product belong to which user. Products repository should contain data about products and nothing else. This will be an issue if the number of cart id increases over time.
+  2. Save cart id to carts repository and save the entire product. We are making a copy in the carts repository. Updating products in products repository will make information in cart repository out of date.
+  3. Save carts id to cart repository and save only the id of the product and cart quantity. Easy products repository update. Easy to search by product id.
+
+&nbsp;
+
 ### Notes taken from Different Data Modeling Approaches comment section:
 
 > <b>Alejandra: </b>Different Data Modeling Approaches
@@ -295,5 +309,26 @@ if (table[hash]) {
 > <b>Mattia: </b>I have learned before that validation should be done in the model side of the app per the principle of "fat models and slim controllers". Why then adding all this logic in the controller? It seems bad to me, am I wrong?
 
 > <b>Stephen: </b>Ideally, we would have two levels of validation - one for data coming into a route handler, and one around saving records. It is important to have validation on data coming into the route handler, as it will keep us from running a bunch of logic only to later find out that some input the user provided is not valid.
+
+&nbsp;
+
+### Notes taken from Understanding a Shopping Cart - Solving Problem #2 comment section:
+
+> <b>Ashish: </b> Why are we creating a new carts repository as opposed to storing the cart data on a cookie?
+
+> The items in a cart are very specific to the browser since the user is not logged in. In this case wont it be better to store the cart information (cart id and associated product ids and quantities on a cookie. Why does it need to go into a repository, which then will have to be tied to the cookie anyway and the information on the cart will have to be pulled out from the respository. This approach can make more sense for logged in users, where a cart can be tied to a user id and can be display even if the user logs in using a different browser.
+
+> <b>Kmail: </b>Generally speaking, there are multiple variables that you may wish to consider before proceeding with cookies:
+
+> - some people tend to reject cookies. This would hinder your shopping cart experience
+> - ensure you comply with local laws (data protection)
+> - inconsistent size limitation across web browsers - how much info do you wish to store ?
+
+> Other points to consider:
+
+> - Will you allow users to access their cart cross-device ?
+> - Given cookie size limitations, how would address a scenario in which a particular user created multiple carts (would you even permit it?)
+
+> Will you implement analytics to gain an insight into people's preferences ? - in general terms, since you are not capturing personal data. How would you deal with product availability if multiple anonymous users placed the same item in their cart in quick succession, but only half of those would continue the check-out process. These are just some questions/scenarios you may wish to consider.
 
 &nbsp;

@@ -332,3 +332,11 @@ if (table[hash]) {
 > Will you implement analytics to gain an insight into people's preferences ? - in general terms, since you are not capturing personal data. How would you deal with product availability if multiple anonymous users placed the same item in their cart in quick succession, but only half of those would continue the check-out process. These are just some questions/scenarios you may wish to consider.
 
 &nbsp;
+
+### Notes taken from Submission Options comment section:
+
+> <b>Ben: </b> data attributes vs hidden input
+
+> <b>Kmail: </b> another aspect worth noting is graceful degradation. <b>What if your end-user disabled JS completely?</b> Hidden input fields are submitted as part of HTML forms. Form submission would still be able to work, provided the user actually clicked the "SUBMIT" button to initiate the submission process. Form's Action attribute would dictate where the data gets submitted to, where they can be validated/sanitised and what not. Apart from supplying ID values, hidden fields are also useful for <b>transmitting csrf tokens to mitigate cross-site request forgery</b>.
+
+&nbsp;

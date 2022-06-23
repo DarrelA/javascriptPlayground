@@ -7,11 +7,16 @@
     {
       "type": "pwa-node",
       "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "program": "${workspaceFolder}\\nodejs-list\\app.js"
+      "name": "app",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\anthony-alicea\\app.js"
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "http",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\anthony-alicea\\http.js"
     }
   ]
 }
